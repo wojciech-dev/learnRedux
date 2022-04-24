@@ -1,5 +1,6 @@
 const { v4 } = uuid;
 const AGE_ID = 'age';
+const CLEAR_BUTTON_ID = 'clear-button';
 const FIRST_NAME_ID = 'firstname';
 const FORM_ID = 'form';
 const LAST_NAME_ID = 'lastname';
@@ -7,6 +8,7 @@ const PEOPLE_LIST_ID = 'people-list';
 const SUBMIT_BUTTON_ID = 'submit-button';
 
 const ageElem = document.getElementById(AGE_ID);
+const clearButtonElem = document.getElementById(CLEAR_BUTTON_ID);
 const firstNameElem = document.getElementById(FIRST_NAME_ID);
 const formElem = document.getElementById(FORM_ID);
 const lastNameElem = document.getElementById(LAST_NAME_ID);
@@ -14,6 +16,7 @@ const listElem = document.getElementById(PEOPLE_LIST_ID);
 const submitButtonElem = document.getElementById(SUBMIT_BUTTON_ID);
 
 formElem.addEventListener('submit', handleOnSubmit);
+clearButtonElem.addEventListener('click', handleClearData);
 
 const { createStore } = Redux;
 
@@ -35,6 +38,8 @@ function reducer(state = [], action) {
             return state.filter(person => person.id !== action.payload);
         case actions.EDIT_PERSON:
             return state.map(person => person.id !== action.payload.id ? person : action.payload);
+        case actions.CLEAR_STORE:
+            return [];
         default:
             console.log(`Nie rozpoznano akcji ${action.type}`);
             return state;
@@ -64,6 +69,12 @@ function editPerson(person) {
     return {
         type: actions.EDIT_PERSON,
         payload: person
+    }
+}
+
+function clearData() {
+    return {
+        type: actions.CLEAR_STORE
     }
 }
 
@@ -132,4 +143,8 @@ function deleteUser(e) {
     const { id } = e.target.dataset;
 
     store.dispatch(deletePerson(id));
+}
+
+function handleClearData() {
+    return store.dispatch(clearData());
 }
